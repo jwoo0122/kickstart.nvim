@@ -100,8 +100,8 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
--- vim.opt.number = true
-vim.opt.relativenumber = true
+vim.opt.number = true
+-- vim.opt.relativenumber = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 -- vim.opt.relativenumber = true
@@ -207,6 +207,49 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+-- Define the custom command Blame
+vim.api.nvim_create_user_command('Blame', function()
+  -- Get the current buffer and line number
+  local buf = vim.api.nvim_get_current_buf()
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+
+  -- Get the current file name
+  local file = vim.api.nvim_buf_get_name(buf)
+
+  -- Construct the git blame command
+  local blame_cmd = string.format('git blame -C -C -C -L %d,%d %s', line, line, file)
+
+  -- Run the git blame command and get the output
+  local handle = io.popen(blame_cmd)
+  local blame_result = handle:read '*a'
+  handle:close()
+
+  -- Extract the revision hash from the git blame output
+  local rev_hash = blame_result:match '^%w+'
+
+  if not rev_hash then
+    print 'No revision hash found for the current line.'
+    return
+  end
+
+  -- Construct the git log command
+  local log_cmd = string.format('git log -1 %s', rev_hash)
+
+  -- Run the git log command and get the output
+  handle = io.popen(log_cmd)
+  local log_result = handle:read '*a'
+  handle:close()
+
+  -- Display the git log result in a new split window with height 10
+  vim.api.nvim_command 'botright new'
+  vim.api.nvim_command 'resize 10'
+  local new_buf = vim.api.nvim_get_current_buf()
+  vim.api.nvim_buf_set_lines(new_buf, 0, -1, false, vim.split(log_result, '\n'))
+  vim.api.nvim_buf_set_option(new_buf, 'modifiable', false)
+end, {})
+
+-- Now you can use :GBlame in Neovim to run the custom command
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
