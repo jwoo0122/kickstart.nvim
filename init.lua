@@ -374,7 +374,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'DaikyXendo/nvim-material-icon' },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -413,7 +413,7 @@ require('lazy').setup({
           layout_config = {
             mirror = true,
             height = 35,
-            width = 90,
+            width = 95,
             prompt_position = 'top',
             anchor = 'N',
             preview_height = 10,
@@ -704,6 +704,14 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'ggandor/leap.nvim',
+    dependencies = { 'tpope/vim-repeat' },
+    config = function()
+      require('leap').create_default_mappings()
+    end,
+  },
+
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
@@ -867,7 +875,17 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      require('kanagawa').setup()
+      require('kanagawa').setup {
+        colors = {
+          theme = {
+            all = {
+              ui = {
+                bg_gutter = 'none',
+              },
+            },
+          },
+        },
+      }
       vim.cmd 'colorscheme kanagawa-dragon'
     end,
   },
@@ -886,7 +904,6 @@ require('lazy').setup({
 
   {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       local custom_gruvbox = require 'lualine.themes.gruvbox_dark'
       local colors = {
@@ -949,7 +966,7 @@ require('lazy').setup({
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
+      -- require('mini.surround').setup()
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
