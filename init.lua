@@ -874,10 +874,21 @@ require('lazy').setup({
           section_separators = '',
         },
         sections = {
-          lualine_c = { 'filename' },
+          lualine_c = {
+            { 'filename', path = 1 },
+          },
         },
       }
     end,
+  },
+
+  {
+    'stevearc/oil.nvim',
+    opts = {
+      view_options = {
+        show_hidden = true,
+      },
+    },
   },
 
   { -- Collection of various small independent plugins/modules
