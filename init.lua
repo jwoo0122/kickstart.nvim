@@ -137,7 +137,7 @@ vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 1000
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -207,6 +207,27 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
+  end,
+})
+
+vim.api.nvim_create_autocmd('BufLeave', {
+  callback = function()
+    vim.cmd 'set nocursorline'
+  end,
+})
+vim.api.nvim_create_autocmd('BufEnter', {
+  callback = function()
+    vim.cmd 'set cursorline'
+  end,
+})
+vim.api.nvim_create_autocmd('WinLeave', {
+  callback = function()
+    vim.cmd 'set nocursorline'
+  end,
+})
+vim.api.nvim_create_autocmd('WinEnter', {
+  callback = function()
+    vim.cmd 'set cursorline'
   end,
 })
 
@@ -431,18 +452,18 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-  {
-    'rmagatti/auto-session',
-    config = function()
-      require('auto-session').setup {
-        log_level = 'error',
-        cwd_change_handling = {
-          restore_upcoming_session = true,
-        },
-        auto_session_suppress_dirs = { '~/', '/' },
-      }
-    end,
-  },
+  -- {
+  --   'rmagatti/auto-session',
+  --   config = function()
+  --     require('auto-session').setup {
+  --       log_level = 'error',
+  --       cwd_change_handling = {
+  --         restore_upcoming_session = true,
+  --       },
+  --       auto_session_suppress_dirs = { '~/', '/' },
+  --     }
+  --   end,
+  -- },
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -615,6 +636,8 @@ require('lazy').setup({
         tsserver = {},
 
         astro = {},
+
+        eslint = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -845,49 +868,48 @@ require('lazy').setup({
           },
         },
       }
-      vim.cmd 'colorscheme kanagawa-dragon'
+      vim.cmd 'colorscheme kanagawa-wave'
     end,
   },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
-  {
-    'levouh/tint.nvim',
-    config = function()
-      require('tint').setup {
-        tint = -65,
-      }
-    end,
-  },
+  -- {
+  --   'levouh/tint.nvim',
+  --   config = function()
+  --     require('tint').setup {
+  --       tint = -65,
+  --     }
+  --   end,
+  -- },
 
   {
     'nvim-lualine/lualine.nvim',
     config = function()
-      local custom_gruvbox = require 'lualine.themes.gruvbox_dark'
-      local colors = {
-        black = '#282828',
-        white = '#ebdbb2',
-        red = '#fb4934',
-        green = '#b8bb26',
-        blue = '#83a598',
-        yellow = '#fe8019',
-        gray = '#a89984',
-        darkgray = '#3c3836',
-        lightgray = '#504945',
-        inactivegray = '#7c6f64',
-        orange = 'e69234',
-      }
-
-      custom_gruvbox.terminal = {
-        a = { bg = colors.orange, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.lightgray, fg = colors.white },
-        c = { bg = colors.lightgray, fg = colors.white },
-      }
+      -- local custom_gruvbox = require 'lualine.themes.gruvbox_dark'
+      -- local colors = {
+      --   black = '#282828',
+      --   white = '#ebdbb2',
+      --   red = '#fb4934',
+      --   green = '#b8bb26',
+      --   blue = '#83a598',
+      --   yellow = '#fe8019',
+      --   gray = '#a89984',
+      --   darkgray = '#3c3836',
+      --   lightgray = '#504945',
+      --   inactivegray = '#7c6f64',
+      --   orange = 'e69234',
+      -- }
+      --
+      -- custom_gruvbox.terminal = {
+      --   a = { bg = colors.orange, fg = colors.black, gui = 'bold' },
+      --   b = { bg = colors.lightgray, fg = colors.white },
+      --   c = { bg = colors.lightgray, fg = colors.white },
+      -- }
 
       require('lualine').setup {
         options = {
-          theme = 'auto',
           component_separators = '',
           section_separators = '',
         },
@@ -928,6 +950,7 @@ require('lazy').setup({
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
+      require('mini.starter').setup { footer = '' }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
