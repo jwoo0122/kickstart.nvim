@@ -974,6 +974,27 @@ require('lazy').setup({
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
       local starter = require 'mini.starter'
+      config.header = [[
+               .                      .
+               .                      ;
+               :                  - --+- -  -
+               !           .          !
+               |        .             .
+               |_         +
+            ,  | `.
+ -  - --- --+-<#>-+- ---  --  -
+            `._|_,'
+               T
+               |                        * 
+               !                                    +
+               :         . :                      .
+               .       *
+     ]]
+
+      config.content_hooks = {
+        starter.gen_hook.adding_bullet '▏ ',
+        starter.gen_hook.aligning('center', 'center'),
+      }
       starter.setup(config)
 
       vim.api.nvim_create_autocmd('User', {
