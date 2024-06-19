@@ -88,10 +88,10 @@ P.S. You can delete this when you're done too. It's your config now! :)
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.cmd 'language en_US'
-vim.g.mapleader = '\\'
-vim.g.maplocalleader = '\\'
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
-vim.cmd 'set guicursor=a:hor10'
+-- vim.cmd 'set guicursor=a:hor10'
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -154,7 +154,7 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
-vim.opt.cursorcolumn = true
+-- vim.opt.cursorcolumn = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 5
@@ -164,8 +164,6 @@ vim.opt.scrolloff = 5
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
-vim.opt.laststatus = 3
-vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
@@ -183,10 +181,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -214,25 +212,25 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd('BufLeave', {
   callback = function()
     vim.cmd 'set nocursorline'
-    vim.cmd 'set nocursorcolumn'
+    -- vim.cmd 'set nocursorcolumn'
   end,
 })
 vim.api.nvim_create_autocmd('BufEnter', {
   callback = function()
     vim.cmd 'set cursorline'
-    vim.cmd 'set cursorcolumn'
+    -- vim.cmd 'set cursorcolumn'
   end,
 })
 vim.api.nvim_create_autocmd('WinLeave', {
   callback = function()
     vim.cmd 'set nocursorline'
-    vim.cmd 'set nocursorcolumn'
+    -- vim.cmd 'set nocursorcolumn'
   end,
 })
 vim.api.nvim_create_autocmd('WinEnter', {
   callback = function()
     vim.cmd 'set cursorline'
-    vim.cmd 'set cursorcolumn'
+    -- vim.cmd 'set cursorcolumn'
   end,
 })
 
@@ -281,15 +279,67 @@ require('lazy').setup({
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
+    config = function()
+      require('gitsigns').setup {
+        signs = {
+          add = { text = '+' },
+          change = { text = '~' },
+        },
+        current_line_blame = true,
+        on_attach = function(bufnr)
+          local gitsigns = require 'gitsigns'
+
+          local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+          end
+
+          -- Navigation
+          map('n', ']c', function()
+            if vim.wo.diff then
+              vim.cmd.normal { ']c', bang = true }
+            else
+              gitsigns.nav_hunk 'next'
+            end
+          end)
+
+          map('n', '[c', function()
+            if vim.wo.diff then
+              vim.cmd.normal { '[c', bang = true }
+            else
+              gitsigns.nav_hunk 'prev'
+            end
+          end)
+
+          -- Actions
+          -- map('n', '<leader>hs', gitsigns.stage_hunk)
+          -- map('n', '<leader>hr', gitsigns.reset_hunk)
+          -- map('v', '<leader>hs', function()
+          --   gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
+          -- end)
+          -- map('v', '<leader>hr', function()
+          --   gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
+          -- end)
+          -- map('n', '<leader>hS', gitsigns.stage_buffer)
+          -- map('n', '<leader>hu', gitsigns.undo_stage_hunk)
+          -- map('n', '<leader>hR', gitsigns.reset_buffer)
+          map('n', '<leader>hp', gitsigns.preview_hunk)
+          map('n', '<leader>hb', function()
+            gitsigns.blame_line { full = true }
+          end)
+          -- map('n', '<leader>tb', gitsigns.toggle_current_line_blame)
+          map('n', '<leader>hd', gitsigns.diffthis)
+          map('n', '<leader>hD', function()
+            gitsigns.diffthis '~'
+          end)
+          -- map('n', '<leader>td', gitsigns.toggle_deleted)
+
+          -- Text object
+          map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        end,
+      }
+    end,
   },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -396,11 +446,10 @@ require('lazy').setup({
         defaults = {
           layout_strategy = 'vertical',
           layout_config = {
-            mirror = true,
             height = 35,
             width = 95,
-            prompt_position = 'top',
-            anchor = 'N',
+            prompt_position = 'bottom',
+            anchor = 'S',
             preview_height = 10,
           },
         },
@@ -576,13 +625,7 @@ require('lazy').setup({
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
-            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-              buffer = event.buf,
-              group = highlight_augroup,
-              callback = vim.lsp.buf.document_highlight,
-            })
-
-            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
               group = highlight_augroup,
               callback = vim.lsp.buf.clear_references,
@@ -950,7 +993,7 @@ require('lazy').setup({
       },
       win_options = {
         conceallevel = 0,
-        cursorcolumn = true,
+        -- cursorcolumn = true,
       },
       buf_options = {
         buflisted = true,
