@@ -157,7 +157,7 @@ vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 35
+vim.opt.scrolloff = 20
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -214,21 +214,25 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd('BufLeave', {
   callback = function()
     vim.cmd 'set nocursorline'
+    vim.cmd 'set nocursorcolumn'
   end,
 })
 vim.api.nvim_create_autocmd('BufEnter', {
   callback = function()
     vim.cmd 'set cursorline'
+    vim.cmd 'set cursorcolumn'
   end,
 })
 vim.api.nvim_create_autocmd('WinLeave', {
   callback = function()
     vim.cmd 'set nocursorline'
+    vim.cmd 'set nocursorcolumn'
   end,
 })
 vim.api.nvim_create_autocmd('WinEnter', {
   callback = function()
     vim.cmd 'set cursorline'
+    vim.cmd 'set cursorcolumn'
   end,
 })
 
@@ -934,7 +938,18 @@ require('lazy').setup({
     opts = {
       keymaps = {
         ['s'] = '<Plug>(leap-forward)',
+        ['<CR>'] = 'actions.select',
+        ['-'] = 'actions.parent',
       },
+      win_options = {
+        conceallevel = 0,
+        cursorcolumn = true,
+      },
+      buf_options = {
+        buflisted = true,
+        bufhidden = '',
+      },
+      use_default_keymaps = false,
       view_options = {
         show_hidden = true,
       },
