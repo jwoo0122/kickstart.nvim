@@ -209,28 +209,34 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-vim.api.nvim_create_autocmd('BufLeave', {
+-- set quick terminal keymap
+vim.keymap.set('n', '<leader>tm', function()
+  vim.cmd 'sp +term'
+end, {})
+
+vim.keymap.set('n', '<leader>ee', '<cmd>e %:h<CR>')
+
+-- Set hybrid number when toggled
+local augroup = vim.api.nvim_create_augroup('numbertoggle', {})
+
+vim.api.nvim_create_autocmd({ 'BufEnter', 'FocusGained', 'InsertLeave', 'CmdlineLeave', 'WinEnter' }, {
+  pattern = '*',
+  group = augroup,
   callback = function()
-    vim.cmd 'set nocursorline'
-    -- vim.cmd 'set nocursorcolumn'
+    if vim.o.nu and vim.api.nvim_get_mode().mode ~= 'i' then
+      vim.opt.relativenumber = true
+    end
   end,
 })
-vim.api.nvim_create_autocmd('BufEnter', {
+
+vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertEnter', 'CmdlineEnter', 'WinLeave' }, {
+  pattern = '*',
+  group = augroup,
   callback = function()
-    vim.cmd 'set cursorline'
-    -- vim.cmd 'set cursorcolumn'
-  end,
-})
-vim.api.nvim_create_autocmd('WinLeave', {
-  callback = function()
-    vim.cmd 'set nocursorline'
-    -- vim.cmd 'set nocursorcolumn'
-  end,
-})
-vim.api.nvim_create_autocmd('WinEnter', {
-  callback = function()
-    vim.cmd 'set cursorline'
-    -- vim.cmd 'set cursorcolumn'
+    if vim.o.nu then
+      vim.opt.relativenumber = false
+      vim.cmd 'redraw'
+    end
   end,
 })
 
