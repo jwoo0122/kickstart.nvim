@@ -942,7 +942,7 @@ require('lazy').setup({
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
-    config = function()
+    config = function(_, config)
       -- Better Around/Inside textobjects
       --
       -- Examples:
@@ -950,7 +950,25 @@ require('lazy').setup({
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
-      require('mini.starter').setup { footer = '' }
+      local starter = require 'mini.starter'
+      starter.setup(config)
+
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'LazyVimStarted',
+        callback = function(ev)
+          local stats = require('lazy').stats()
+          local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+          starter.config.footer = 'Loaded ' .. stats.loaded .. '/' .. stats.count .. ' plugins in ' .. ms .. 'ms'
+          --
+          -- INFO: based on @echasnovski's recommendation (thanks a lot!!!)
+          if vim.bo[ev.buf].filetype == 'starter' then
+            pcall(starter.refresh)
+          end
+        end,
+      })
+
+      -- local lazyStat = require('lazy').stats()
+      -- require('mini.starter').setup { footer = string.format('%s/%s plugins loaded in %sms', lazyStat.loaded, lazyStat.count, lazyStat.startuptime) }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
