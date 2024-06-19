@@ -157,7 +157,7 @@ vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 20
+vim.opt.scrolloff = 5
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -852,28 +852,20 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'rebelot/kanagawa.nvim',
+    'folke/tokyonight.nvim',
     lazy = false,
     priority = 1000, -- Make sure to load this before all the other start plugins.
-    opts = {
-      transparent_mode = true,
-    },
     config = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      require('kanagawa').setup {
-        colors = {
-          theme = {
-            all = {
-              ui = {
-                bg_gutter = 'none',
-              },
-            },
-          },
-        },
+      require('tokyonight').setup {
+        transparent = true,
+        style = 'night',
+        lualine_bold = true,
+        terminal_colors = false,
       }
-      vim.cmd 'colorscheme kanagawa-wave'
+      vim.cmd 'colorscheme tokyonight'
     end,
   },
 
@@ -912,21 +904,36 @@ require('lazy').setup({
       --   b = { bg = colors.lightgray, fg = colors.white },
       --   c = { bg = colors.lightgray, fg = colors.white },
       -- }
+      local custom_theme = require 'lualine.themes.auto'
+      custom_theme.normal.c.bg = nil
 
       require('lualine').setup {
         options = {
           component_separators = '',
-          section_separators = '',
+          section_separators = { left = '', right = '' },
+          theme = custom_theme,
         },
         sections = {
+          lualine_a = {
+            { 'mode', separator = { left = '', right = '' } },
+          },
           lualine_b = {
             vim.loop.cwd,
             'branch',
-            'diff',
             'diagnostics',
           },
           lualine_c = {
             { 'filename', path = 1 },
+          },
+          lualine_x = {
+            'filetype',
+          },
+          lualine_y = {
+            'progress',
+          },
+          lualine_z = {
+
+            { 'location', separator = { left = '', right = '' } },
           },
         },
       }
