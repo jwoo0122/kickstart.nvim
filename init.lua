@@ -1,7 +1,13 @@
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+--  NOTE: Must happen befmre plugins are loaded (otherwise wrong leader will be used)
 vim.cmd 'language en_US'
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+
+vim.o.tabstop = 2
+vim.o.softtabstop = 2
+vim.o.shiftwidth = 2
+vim.o.expandtab = true
+vim.o.smarttab = true
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -108,12 +114,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- set quick terminal keymap
 vim.keymap.set('n', '<leader>tm', function()
-  vim.cmd 'sp +term'
+  vim.cmd '20sp +term'
+  vim.cmd 'startinsert'
 end, {})
 
 vim.keymap.set('n', '<leader>ee', '<cmd>e %:h<CR>')
 
 vim.keymap.set('n', '<leader>z', ':Z ')
+vim.keymap.set('n', '<leader>bz', '<cmd>Z %:h<CR>')
 
 -- Set hybrid number when toggled
 local augroup = vim.api.nvim_create_augroup('numbertoggle', {})
@@ -150,7 +158,6 @@ vim.opt.rtp:prepend(lazypath)
 
 --
 require('lazy').setup({
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   {
     'tpope/vim-fugitive',
     config = function()
