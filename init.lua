@@ -463,7 +463,7 @@ require('lazy').setup({
         },
         pickers = {
           find_files = {
-            find_command = { 'rg', '--files', '--hidden', '--glob', '!**/.git/*' },
+            find_command = { 'rg', '--files', '--hidden', '--glob', '!**/.git/*', '--glob', '!**/.yarn/*' },
           },
         },
       }
@@ -918,14 +918,15 @@ require('lazy').setup({
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
-  -- {
-  --   'levouh/tint.nvim',
-  --   config = function()
-  --     require('tint').setup {
-  --       tint = -65,
-  --     }
-  --   end,
-  -- },
+  {
+    'levouh/tint.nvim',
+    config = function()
+      require('tint').setup {
+        tint = -30,
+        saturation = 0.3,
+      }
+    end,
+  },
 
   {
     'nvim-lualine/lualine.nvim',
