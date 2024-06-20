@@ -154,6 +154,7 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
+vim.opt.laststatus = 3
 -- vim.opt.cursorcolumn = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
@@ -215,6 +216,8 @@ vim.keymap.set('n', '<leader>tm', function()
 end, {})
 
 vim.keymap.set('n', '<leader>ee', '<cmd>e %:h<CR>')
+
+vim.keymap.set('n', '<leader>z', ':Z ')
 
 -- Set hybrid number when toggled
 local augroup = vim.api.nvim_create_augroup('numbertoggle', {})
@@ -450,23 +453,17 @@ require('lazy').setup({
         -- },
         -- pickers = {}
         defaults = {
-          layout_strategy = 'vertical',
+          borderchars = { '─', ' ', '─', ' ', ' ', ' ', ' ', ' ' },
+          layout_strategy = 'bottom_pane',
           layout_config = {
-            height = 35,
-            width = 95,
             prompt_position = 'bottom',
-            anchor = 'S',
-            preview_height = 10,
+            height = 30,
           },
+          winblend = 20,
         },
         pickers = {
           find_files = {
             find_command = { 'rg', '--files', '--hidden', '--glob', '!**/.git/*' },
-          },
-        },
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
           },
         },
       }
@@ -497,8 +494,8 @@ require('lazy').setup({
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
 
-      -- It's also possible to pass additional configuration options.
-      --  See `:help telescope.builtin.live_grep()` for information about particular keys
+      -- it's also possible to pass additional configuration options.
+      --  see `:help telescope.builtin.live_grep()` for information about particular keys
       vim.keymap.set('n', '<leader>s/', function()
         builtin.live_grep {
           grep_open_files = true,
@@ -967,8 +964,11 @@ require('lazy').setup({
             { 'mode', separator = { left = '', right = '' } },
           },
           lualine_b = {
-            vim.loop.cwd,
+            function()
+              return '~' .. vim.loop.cwd():sub(#os.getenv 'HOME' + 1)
+            end,
             'branch',
+            'diff',
             'diagnostics',
           },
           lualine_c = {
