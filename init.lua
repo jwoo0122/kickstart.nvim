@@ -1,4 +1,4 @@
---  NOTE: Must happen befmre plugins are loaded (otherwise wrong leader will be used)
+-- NOTE: Must happen befmre plugins are loaded (otherwise wrong leader will be used)
 vim.cmd 'language en_US'
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -56,7 +56,7 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
-vim.opt.laststatus = 3
+vim.opt.laststatus = 2
 -- vim.opt.cursorcolumn = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
@@ -120,7 +120,7 @@ end, {})
 
 vim.keymap.set('n', '<leader>ee', '<cmd>e %:h<CR>')
 
-vim.keymap.set('n', '<leader>z', ':Z ')
+-- vim.keymap.set('n', '<leader>z', ':Zi ')
 vim.keymap.set('n', '<leader>bz', '<cmd>Z %:h<CR>')
 
 -- Set hybrid number when toggled
@@ -164,7 +164,12 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>g', ':Git ')
     end,
   },
-  'nanotee/zoxide.vim',
+  {
+    'nanotee/zoxide.vim',
+    config = function()
+      vim.g.zoxide_use_select = 1
+    end,
+  },
   'numToStr/Comment.nvim',
 
   -- Here is a more advanced example where we pass configuration
@@ -685,15 +690,15 @@ require('lazy').setup({
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
-  {
-    'levouh/tint.nvim',
-    config = function()
-      require('tint').setup {
-        tint = -30,
-        saturation = 0.3,
-      }
-    end,
-  },
+  -- {
+  --   'levouh/tint.nvim',
+  --   config = function()
+  --     require('tint').setup {
+  --       tint = -30,
+  --       saturation = 0.3,
+  --     }
+  --   end,
+  -- },
 
   {
     'nvim-lualine/lualine.nvim',
@@ -880,21 +885,12 @@ require('lazy').setup({
     end,
   },
 
-  {
-    'akinsho/toggleterm.nvim',
-    config = function()
-      require('toggleterm').setup {
-        size = 20,
-      }
-
-      vim.keymap.set('n', '<C-`>', '<cmd>ToggleTerm<CR>')
-    end,
-  },
   { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {
     indent = {
       char = '▏',
     },
   } },
+
   { 'nvim-treesitter/nvim-treesitter-context', opts = {
     max_lines = 5,
   } },
