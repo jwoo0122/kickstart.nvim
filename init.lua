@@ -56,6 +56,7 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
 vim.opt.laststatus = 2
 -- vim.opt.cursorcolumn = true
 
@@ -130,6 +131,8 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'FocusGained', 'InsertLeave', 'Cmdline
   pattern = '*',
   group = augroup,
   callback = function()
+    vim.opt.cursorline = true
+    vim.opt.cursorcolumn = true
     if vim.o.nu and vim.api.nvim_get_mode().mode ~= 'i' then
       vim.opt.relativenumber = true
     end
@@ -140,6 +143,8 @@ vim.api.nvim_create_autocmd({ 'BufLeave', 'FocusLost', 'InsertEnter', 'CmdlineEn
   pattern = '*',
   group = augroup,
   callback = function()
+    vim.opt.cursorline = false
+    vim.opt.cursorcolumn = false
     if vim.o.nu then
       vim.opt.relativenumber = false
       vim.cmd 'redraw'
@@ -213,13 +218,13 @@ require('lazy').setup({
           end)
 
           -- Actions
-          map('n', '<leader>hp', gitsigns.preview_hunk)
-          map('n', '<leader>hb', function()
+          map('n', '<leader>nd', gitsigns.preview_hunk)
+          map('n', '<leader>nb', function()
             gitsigns.blame_line { full = true }
           end)
           -- map('n', '<leader>tb', gitsigns.toggle_current_line_blame)
-          map('n', '<leader>hd', gitsigns.diffthis)
-          map('n', '<leader>hD', function()
+          map('n', '<leader>nd', gitsigns.diffthis)
+          map('n', '<leader>nD', function()
             gitsigns.diffthis '~'
           end)
           -- map('n', '<leader>td', gitsigns.toggle_deleted)
@@ -297,13 +302,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
-        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      vim.keymap.set('n', '<leader>/', builtin.current_buffer_fuzzy_find, { desc = '[/] Fuzzily search in current buffer' })
 
       -- it's also possible to pass additional configuration options.
       --  see `:help telescope.builtin.live_grep()` for information about particular keys
@@ -509,12 +508,26 @@ require('lazy').setup({
   },
 
   {
-    'ggandor/leap.nvim',
-    dependencies = { 'tpope/vim-repeat' },
-    config = function()
-      require('leap').create_default_mappings()
-    end,
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    ---@type Flash.Config
+    opts = {},
+  -- stylua: ignore
+    keys = {
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+    },
   },
+  -- {
+  --   'ggandor/leap.nvim',
+  --   dependencies = { 'tpope/vim-repeat' },
+  --   config = function()
+  --     require('leap').create_default_mappings()
+  --   end,
+  -- },
 
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -771,7 +784,7 @@ require('lazy').setup({
         ['-'] = 'actions.parent',
       },
       win_options = {
-        conceallevel = 0,
+        -- conceallevel = 0,
         -- cursorcolumn = true,
       },
       use_default_keymaps = false,
@@ -894,6 +907,8 @@ require('lazy').setup({
   { 'nvim-treesitter/nvim-treesitter-context', opts = {
     max_lines = 5,
   } },
+
+  { 'm4xshen/autoclose.nvim', opts = {} },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
