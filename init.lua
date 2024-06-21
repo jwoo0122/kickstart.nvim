@@ -266,7 +266,6 @@ require('lazy').setup({
             prompt_position = 'bottom',
             height = 30,
           },
-          winblend = 20,
         },
         pickers = {
           find_files = {
@@ -880,6 +879,25 @@ require('lazy').setup({
       }
     end,
   },
+
+  {
+    'akinsho/toggleterm.nvim',
+    config = function()
+      require('toggleterm').setup {
+        size = 20,
+      }
+
+      vim.keymap.set('n', '<C-`>', '<cmd>ToggleTerm<CR>')
+    end,
+  },
+  { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {
+    indent = {
+      char = '▏',
+    },
+  } },
+  { 'nvim-treesitter/nvim-treesitter-context', opts = {
+    max_lines = 5,
+  } },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
