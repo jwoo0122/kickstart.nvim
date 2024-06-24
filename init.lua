@@ -2,6 +2,7 @@
 vim.cmd 'language en_US'
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.o.guifont = 'GeistMono Nerd Font Mono'
 
 vim.o.tabstop = 2
 vim.o.softtabstop = 2
@@ -691,7 +692,7 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       require('tokyonight').setup {
-        transparent = true,
+        transparent = false,
         style = 'night',
         lualine_bold = true,
         terminal_colors = false,
@@ -889,14 +890,14 @@ require('lazy').setup({
     end,
   },
 
-  {
-    'karb94/neoscroll.nvim',
-    config = function()
-      require('neoscroll').setup {
-        easing = 'quintic',
-      }
-    end,
-  },
+  -- {
+  --   'karb94/neoscroll.nvim',
+  --   config = function()
+  --     require('neoscroll').setup {
+  --       easing = 'quintic',
+  --     }
+  --   end,
+  -- },
 
   { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {
     indent = {
