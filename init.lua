@@ -780,7 +780,6 @@ require('lazy').setup({
     'stevearc/oil.nvim',
     opts = {
       keymaps = {
-        ['s'] = '<Plug>(leap-forward)',
         ['<CR>'] = 'actions.select',
         ['-'] = 'actions.parent',
       },
