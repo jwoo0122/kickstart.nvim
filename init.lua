@@ -125,6 +125,12 @@ vim.keymap.set('n', '<leader>ee', '<cmd>e %:h<CR>')
 -- vim.keymap.set('n', '<leader>z', ':Zi ')
 vim.keymap.set('n', '<leader>bz', '<cmd>Z %:h<CR>')
 
+vim.filetype.add {
+  extension = {
+    mdx = 'mdx',
+  },
+}
+
 -- Set hybrid number when toggled
 local augroup = vim.api.nvim_create_augroup('numbertoggle', {})
 
@@ -879,6 +885,8 @@ require('lazy').setup({
       require('nvim-treesitter.install').prefer_git = true
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
+      local ft_to_parser = require('nvim-treesitter.parsers').filetype_to_parsername
+      ft_to_parser.mdx = 'markdown'
 
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
