@@ -326,6 +326,7 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
+
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -451,7 +452,7 @@ require('lazy').setup({
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -811,23 +812,6 @@ require('lazy').setup({
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
       local starter = require 'mini.starter'
-      config.header = [[
-               .                      .
-               .                      ;
-               :                  - --+- -  -
-               !           .          !
-               |        .             .
-               |_         +
-            ,  | `.
- -  - --- --+-<#>-+- ---  --  -
-            `._|_,'
-               T
-               |                        * 
-               !                                    +
-               :         . :                      .
-               .       *
-     ]]
-
       config.content_hooks = {
         starter.gen_hook.adding_bullet '▏ ',
         starter.gen_hook.aligning('center', 'center'),
@@ -866,7 +850,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'rust' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
