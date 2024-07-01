@@ -58,7 +58,7 @@ vim.opt.inccommand = 'split'
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
-vim.opt.laststatus = 2
+vim.opt.laststatus = 3
 -- vim.opt.cursorcolumn = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
