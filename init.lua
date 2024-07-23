@@ -686,27 +686,35 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    lazy = false,
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+  {
+    'ellisonleao/gruvbox.nvim',
+    priority = 1000,
     config = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      require('tokyonight').setup {
-        transparent = false,
-        style = 'night',
-        lualine_bold = true,
-        terminal_colors = false,
-      }
-      vim.cmd 'colorscheme tokyonight'
+      require('gruvbox').setup()
+      vim.cmd 'colorscheme gruvbox'
     end,
   },
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is.
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --   'folke/tokyonight.nvim',
+  --   lazy = false,
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  --   config = function()
+  --     -- Load the colorscheme here.
+  --     -- Like many other themes, this one has different styles, and you could load
+  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --     require('tokyonight').setup {
+  --       transparent = false,
+  --       style = 'night',
+  --       lualine_bold = true,
+  --       terminal_colors = false,
+  --     }
+  --     vim.cmd 'colorscheme tokyonight'
+  --   end,
+  -- },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -744,18 +752,19 @@ require('lazy').setup({
       --   b = { bg = colors.lightgray, fg = colors.white },
       --   c = { bg = colors.lightgray, fg = colors.white },
       -- }
-      local custom_theme = require 'lualine.themes.auto'
-      custom_theme.normal.c.bg = nil
+      -- local custom_theme = require 'lualine.themes.auto'
+      -- custom_theme.normal.c.bg = nil
 
       require('lualine').setup {
         options = {
           component_separators = '',
-          section_separators = { left = '', right = '' },
-          theme = custom_theme,
+          section_separators = { left = '', right = '' },
+          theme = 'gruvbox',
+          -- theme = custom_theme,
         },
         sections = {
           lualine_a = {
-            { 'mode', separator = { left = '', right = '' } },
+            { 'mode', separator = { left = '', right = '' } },
           },
           lualine_b = {
             function()
@@ -776,7 +785,7 @@ require('lazy').setup({
           },
           lualine_z = {
 
-            { 'location', separator = { left = '', right = '' } },
+            { 'location', separator = { left = '', right = '' } },
           },
         },
       }
